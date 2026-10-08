@@ -1,48 +1,60 @@
 # NordFireworks
 
-Лёгкий плагин ограничения частоты ручного использования фейерверков для **Paper и Folia 26.2**, Java 25. Один JAR для обеих платформ.
+Limits how often a player can use firework rockets on Paper 26.2 or Folia 26.2. One Java 25 JAR supports both platforms.
 
-После запуска ракеты с земли или ускорения на элитрах появляется стандартный Minecraft-индикатор перезарядки на предмете. По умолчанию — **40 тиков (2 секунды при 20 TPS)**. Ограничение общее для игрока: смена ячейки, стопки или руки не обходит его.
+A rocket launch or elytra boost starts the vanilla item cooldown indicator. The default is 40 ticks—2 seconds at 20 TPS. The cooldown belongs to the player, not a hotbar slot, stack or hand.
 
-## Установка
+## Installation
 
-1. Скачайте `NordFireworks-1.0.0.jar` из [Releases](https://github.com/NetGraniz/NordFireworks/releases).
-2. Остановите сервер, поместите один JAR в `plugins`, запустите сервер.
-3. Настройте `plugins/NordFireworks/config.yml` и выполните `/nordfireworks reload`.
+Download the JAR from [Releases](https://github.com/NetGraniz/NordFireworks/releases). Stop the server, install one copy in `plugins` and start it to create `plugins/NordFireworks/config.yml`.
+
+## Configuration
 
 ```yaml
-# 20 ticks = 1 second at 20 TPS; 0 disables new cooldowns.
 cooldown-ticks: 40
 ```
 
-Допускаются целые значения от 0 до 12000. Некорректный reload не заменяет действующее значение. Уже выданные перезарядки истекают естественным образом, в том числе после выключения ограничения.
+Accepted values are integers from 0 to 12000. A value of 0 disables new cooldowns; cooldowns already active expire normally. An invalid reload keeps the previous value.
 
-## Права
+Run `/nordfireworks reload` after editing the file.
 
-- `nordfireworks.admin` — перезагрузка конфига, по умолчанию у операторов.
-- `nordfireworks.bypass` — не выдавать этому игроку новые перезарядки. По умолчанию **ни у кого**, включая операторов. Уже существующий ванильный cooldown это право не снимает.
+## Permissions
 
-## Поведение и границы
+| Permission | Allows | Default |
+| --- | --- | --- |
+| `nordfireworks.admin` | `/nordfireworks reload` | Operators |
+| `nordfireworks.bypass` | Use rockets without NordFireworks adding a new cooldown | Nobody, including operators |
 
-- Обрабатываются Paper-события ручного запуска и ускорения, а не каждое движение/тик игрока. Отменённое другим плагином использование не должно выдавать новую перезарядку.
-- Применяется встроенный серверный cooldown; его индикатор отправляется обычному клиенту без модов. Кастомная группа перезарядки у использованной ракеты также учитывается, более длинная чужая перезарядка не сокращается.
-- Нет фоновых задач, базы данных, сетевых запросов, списков UUID или обходов игроков/чанков. Обработчики работают в потоке региона игрока, без доступа к чужим регионам.
-- Настройка в тиках, поэтому при низком TPS перезарядка занимает больше реального времени. Состояние не сохраняется плагином при перезаходе/перезапуске: жизненным циклом cooldown управляет Minecraft.
-- Раздатчики и ракеты из арбалетов не ограничиваются. Это не защита от всех лаг-машин и не ограничитель скорости полёта, загрузки или генерации чанков.
-- Плагин не может запретить создание ракет напрямую другим плагином. На этапе `MONITOR` событие уже принято; если другой обработчик позже отменит появление сущности, выданный cooldown может остаться.
+Bypass does not clear an already active vanilla cooldown.
 
-## Сборка и проверки
+## Behavior and cost
 
-Требуются JDK 25 и Maven 3.9+:
+The plugin handles rocket launches and boosts, not movement ticks. It applies a cooldown only to accepted events; events already cancelled by another plugin do not start one.
 
-```sh
+The normal client displays the built-in server cooldown without a mod. Custom item cooldown groups are respected, and a longer existing cooldown is not shortened.
+
+There are no background jobs, database or network requests, UUID maps, player scans or chunk scans. Player work stays on the owning region.
+
+Cooldowns count ticks, so low TPS lengthens the real-time wait. Their state follows Minecraft's player lifecycle; NordFireworks does not persist it across reconnects or server restarts.
+
+## Limits
+
+Dispenser and crossbow rockets are not limited. Direct entity spawning by another plugin is outside this cooldown. The plugin does not cap elytra speed, chunk loading or generation, and does not remove other lag machines.
+
+The listener runs at MONITOR for accepted events. If another plugin cancels an event later, a cooldown may already have been applied.
+
+## Build and tests
+
+Use Maven 3.9+ and JDK 25:
+
+```text
 mvn -B -ntp clean verify
 ```
 
-JAR появляется в `target/`. Автотесты проверяют обработчики и конфигурацию. Дополнительный интеграционный тест запускается только на изолированных локальных Paper/Folia с синтетическими данными (см. `test-support/`). Боевые данные и секреты в проекте не используются.
+The output is `target/NordFireworks-1.0.0.jar`. Tests cover configuration and event handling. Integration helpers in `test-support` use synthetic Paper/Folia fixtures, not production worlds or credentials.
 
-## API
+## API references
 
-- [Paper: supporting Paper and Folia](https://docs.papermc.io/paper/dev/folia-support/)
-- [Paper API: item cooldown](https://jd.papermc.io/paper/26.2/org/bukkit/entity/HumanEntity.html)
-- [Paper: firework launch/boost implementation](https://github.com/PaperMC/Paper/blob/ver/26.2/paper-server/patches/sources/net/minecraft/world/item/FireworkRocketItem.java.patch)
+- [Folia support](https://docs.papermc.io/paper/dev/folia-support/)
+- [HumanEntity cooldown API](https://jd.papermc.io/paper/26.2/org/bukkit/entity/HumanEntity.html)
+- [FireworkRocketItem event hooks](https://github.com/PaperMC/Paper/blob/ver/26.2/paper-server/patches/sources/net/minecraft/world/item/FireworkRocketItem.java.patch)
