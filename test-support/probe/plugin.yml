@@ -1,0 +1,12 @@
+name: FireworksTestProbe
+version: '1.0.0'
+main: com.nordfjell.nordfireworks.test.FireworksTestProbe
+api-version: '26.2'
+folia-supported: true
+depend: [NordFireworks]
+commands:
+  fwtest:
+    permission: fireworksprobe.console
+permissions:
+  fireworksprobe.console:
+    default: op

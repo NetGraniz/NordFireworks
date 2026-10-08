@@ -1,0 +1,5 @@
+# Shared cooldown for player-launched rockets: elytra boosts and ground launches.
+# Applies to both hands and every inventory slot, not to a particular stack.
+# 20 ticks = 1 second at 20 TPS. Set 0 to disable new cooldowns.
+# Allowed range: 0..12000 ticks. Existing cooldowns expire naturally after reload.
+cooldown-ticks: 40
