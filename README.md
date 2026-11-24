@@ -58,3 +58,7 @@ The output is `target/NordFireworks-1.0.0.jar`.
 - [Folia support](https://docs.papermc.io/paper/dev/folia-support/)
 - [HumanEntity cooldown API](https://jd.papermc.io/paper/26.2/org/bukkit/entity/HumanEntity.html)
 - [FireworkRocketItem event hooks](https://github.com/PaperMC/Paper/blob/ver/26.2/paper-server/patches/sources/net/minecraft/world/item/FireworkRocketItem.java.patch)
+
+## License
+
+Current development on `main` is licensed under [GNU GPL v3.0 only](LICENSE). The latest published release remains available under the MIT License stated on its release page.
