@@ -43,7 +43,7 @@ Dispenser and crossbow rockets are not limited. Direct entity spawning by anothe
 
 The listener runs at MONITOR for accepted events. If another plugin cancels an event later, a cooldown may already have been applied.
 
-## Build and tests
+## Build
 
 Use Maven 3.9+ and JDK 25:
 
@@ -51,7 +51,7 @@ Use Maven 3.9+ and JDK 25:
 mvn -B -ntp clean verify
 ```
 
-The output is `target/NordFireworks-1.0.0.jar`. Tests cover configuration and event handling. Integration helpers in `test-support` use synthetic Paper/Folia fixtures, not production worlds or credentials.
+The output is `target/NordFireworks-1.0.0.jar`.
 
 ## API references
 

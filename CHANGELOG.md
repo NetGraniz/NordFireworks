@@ -7,6 +7,5 @@
 - One Java 25 JAR for Paper and Folia 26.2.
 - `cooldown-ticks` setting, `/nordfireworks reload` command, and a separate bypass permission that is not granted to operators by default.
 - No background tasks, network requests, or databases.
-- Unit tests and isolated gameplay checks passed on Paper and Folia; see `TESTING.md`.
 
 Dispensers, crossbows, and flight speed are not limited. Production servers are never modified automatically.
