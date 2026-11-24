@@ -1,0 +1,20 @@
+name: NordFireworks
+version: '${project.version}'
+main: com.nordfjell.nordfireworks.NordFireworksPlugin
+api-version: '26.2'
+folia-supported: true
+author: Nord Fjell
+description: Firework rocket cooldown with the vanilla item indicator.
+website: https://github.com/NetGraniz/NordFireworks
+commands:
+  nordfireworks:
+    description: Reload the firework cooldown configuration.
+    usage: /nordfireworks reload
+    permission: nordfireworks.admin
+permissions:
+  nordfireworks.admin:
+    default: op
+    description: Allows reloading the configuration.
+  nordfireworks.bypass:
+    default: false
+    description: Exempts a player from new cooldowns only if explicitly granted.
